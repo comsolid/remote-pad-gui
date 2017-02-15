@@ -1,0 +1,14 @@
+{
+  "name": "remote-pad-gui",
+  "version": "0.0.0",
+  "description": "Electron app to manage both Remote Pad and Remote Pad Server",
+  "main": "./dist/main.js",
+  "dependencies": {
+    "vue": "^2.1.10",
+    "vue-electron": "^1.0.6",
+    "vue-router": "^2.1.2",
+    "vuex": "^2.1.1"
+  },
+  "devDependencies": {},
+  "author": "Átila Camurça <camurca.home@gmail.com>"
+}
