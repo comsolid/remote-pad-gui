@@ -8,7 +8,9 @@
         <div class="card-content">
             <div class="content is-medium capitalize has-text-centered">
                 <p class="title">Player {{number}}</p>
-                <span class="tag is-medium is-success">C - {{name}}</span>
+                <span class="tag is-medium"
+                    :class="[isConnected ? 'is-success' : 'is-danger']"
+                >{{ isConnected ? 'C' : 'D' }} - {{name}}</span>
             </div>
         </div>
     </div>
@@ -25,6 +27,11 @@ export default {
         number: {
             type: Number,
             required: true
+        },
+        isConnected: {
+            type: Boolean,
+            required: true,
+            default: false
         }
     },
     methods: {
