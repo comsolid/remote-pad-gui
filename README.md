@@ -1,8 +1,14 @@
-# remote-pad-gui
+# Remote Pad GUI
 
 > Electron app to manage both Remote Pad and Remote Pad Server
 
 ## Build Setup
+
+```bash
+# install dependencies on debian/ubuntu/mint
+sudo apt-get install icnsutils
+sudo apt-get install graphicsmagick
+```
 
 ``` bash
 # install dependencies

@@ -8,11 +8,15 @@
             <div class="columns">
                 <div class="column">
                     <service-card
-                        :description="services.web.description"></service-card>
+                        :description="services.web.description"
+                        :pm2service="services.web.pm2service"
+                    ></service-card>
                 </div>
                 <div class="column">
                     <service-card
-                        :description="services.broker.description"></service-card>
+                        :description="services.broker.description"
+                        :pm2service="services.broker.pm2service"
+                    ></service-card>
                 </div>
             </div>
         </div>
@@ -32,11 +36,11 @@ export default {
             services: {
                 'web': {
                     'description': 'Web Server',
-                    'status': 'stopped'
+                    'pm2service': 'remote-pad'
                 },
                 'broker': {
                     'description': 'MQTT Broker',
-                    'status': 'stopped'
+                    'pm2service': 'remote-pad-server'
                 }
             }
         }
