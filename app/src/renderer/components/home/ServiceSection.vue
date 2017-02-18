@@ -1,26 +1,24 @@
 <template lang="html">
-    <section class="section">
-        <div class="container">
-            <div class="heading">
-                <h2 class="subtitle has-text-centered">Services</h2>
+    <div class="container">
+        <div class="heading">
+            <h2 class="subtitle has-text-centered">Services</h2>
+        </div>
+        <hr>
+        <div class="columns">
+            <div class="column">
+                <service-card
+                    :description="services.web.description"
+                    :pm2service="services.web.pm2service"
+                ></service-card>
             </div>
-            <hr>
-            <div class="columns">
-                <div class="column">
-                    <service-card
-                        :description="services.web.description"
-                        :pm2service="services.web.pm2service"
-                    ></service-card>
-                </div>
-                <div class="column">
-                    <service-card
-                        :description="services.broker.description"
-                        :pm2service="services.broker.pm2service"
-                    ></service-card>
-                </div>
+            <div class="column">
+                <service-card
+                    :description="services.broker.description"
+                    :pm2service="services.broker.pm2service"
+                ></service-card>
             </div>
         </div>
-    </section>
+    </div>
 </template>
 
 <script>
