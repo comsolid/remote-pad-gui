@@ -1,19 +1,22 @@
 <template lang="html">
-    <div>
+    <section class="section">
+        <connection-notification></connection-notification>
         <player-section></player-section>
         <service-section></service-section>
-    </div>
+    </section>
 </template>
 
 <script>
 import PlayerSection from 'components/home/PlayerSection'
 import ServiceSection from 'components/home/ServiceSection'
+import ConnectionNotification from 'components/home/ConnectionNotification'
 
 export default {
     name: 'home-page',
     components: {
         PlayerSection,
-        ServiceSection
+        ServiceSection,
+        ConnectionNotification
     }
 }
 </script>
