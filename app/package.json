@@ -1,7 +1,9 @@
 {
   "name": "remote-pad-gui",
-  "version": "0.0.0",
+  "productName": "Remote Pad GUI",
+  "version": "1.0.0",
   "description": "Electron app to manage both Remote Pad and Remote Pad Server",
+  "homepage": "https://github.com/comsolid/remote-pad-gui",
   "main": "./dist/main.js",
   "dependencies": {
     "bulma": "^0.3.1",
