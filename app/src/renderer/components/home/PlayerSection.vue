@@ -67,8 +67,10 @@ export default {
             })
 
             this.client.on('message', (topic, payload) => {
-                const player = JSON.parse(payload)
-                this.players[player.name].isConnected = player.connected
+                if (topic === 'gui/player') {
+                    const player = JSON.parse(payload)
+                    this.players[player.name].isConnected = player.connected
+                }
             })
         })
     },

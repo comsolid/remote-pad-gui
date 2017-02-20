@@ -11,6 +11,12 @@
             <nav class="level">
                 <div class="level-item has-text-centered">
                     <div>
+                        <p class="heading">PID</p>
+                        <p class="title">{{pid}}</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div>
                         <p class="heading">Memory</p>
                         <p class="title">{{memory}}</p>
                     </div>
@@ -31,8 +37,9 @@
 </template>
 
 <script>
-import pm2 from 'pm2'
-import bytes from 'pretty-bytes'
+import bytes from 'prettier-bytes'
+import usage from 'pidusage'
+import { ipcRenderer } from 'electron'
 
 export default {
     name: 'service-card',
@@ -41,7 +48,7 @@ export default {
             type: String,
             required: true
         },
-        pm2service: {
+        module: {
             type: String,
             required: true
         }
@@ -50,8 +57,10 @@ export default {
         return {
             status: 'stopped',
             memory: 0,
+            bytes: 0,
             cpu: 0,
-            interval: null
+            interval: null,
+            pid: -1
         }
     },
     mounted () {
@@ -59,30 +68,44 @@ export default {
             this.monit()
         }, 1000)
         this.monit()
+
+        ipcRenderer.on('process-pid', (event, result) => {
+            if (result.module === this.module) {
+                this.pid = result.pid
+                this.status = 'online'
+            }
+        })
     },
     methods: {
         monit () {
-            pm2.describe(this.pm2service, (err, procs) => {
-                if (err) console.error(err)
-
-                if (procs && procs.length > 0) {
-                    this.status = procs[0].pm2_env.status
-                    this.memory = bytes(procs[0].monit.memory)
-                    this.cpu = procs[0].monit.cpu
-                }
-            })
+            if (this.pid > 0) {
+                usage.stat(this.pid, (err, stat) => {
+                    if (err) {
+                        console.log(err)
+                        this.reset()
+                    } else {
+                        this.memory = bytes(stat.memory)
+                        this.bytes = stat.memory
+                        this.cpu = stat.cpu
+                    }
+                })
+            }
         },
         restart () {
+            this.reset()
+            ipcRenderer.send('restart-process', this.module)
+        },
+        reset () {
             this.status = 'stopped'
             this.memory = 0
+            this.bytes = 0
             this.cpu = 0
-            pm2.restart(this.pm2service, (err, ret) => {
-                if (err) console.error(err)
-            })
+            this.pid = -1
         }
     },
     beforeDestroy () {
         clearInterval(this.interval)
+        usage.unmonitor(this.pid)
     }
 }
 </script>
