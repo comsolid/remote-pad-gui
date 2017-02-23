@@ -16,7 +16,7 @@
     "unit": "cross-env BABEL_ENV=testing-unit karma start test/unit/karma.conf.js",
     "vue:route": "node tasks/vue/route.js",
     "vuex:module": "node tasks/vuex/module.js",
-    "postinstall": "npm run lint:fix && cd app && yarn"
+    "postinstall": "cd app && yarn"
   },
   "build": {
     "productName": "Remote Pad GUI",

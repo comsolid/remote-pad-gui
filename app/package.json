@@ -7,6 +7,7 @@
   "main": "./dist/main.js",
   "dependencies": {
     "bulma": "^0.3.1",
+    "ewait": "^0.2.1",
     "forever-monitor": "^1.7.1",
     "mqtt": "^2.4.0",
     "pidusage": "^1.1.1",

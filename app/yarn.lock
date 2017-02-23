@@ -321,6 +321,10 @@ eventemitter2@0.4.14:
   version "0.4.14"
   resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-0.4.14.tgz#8f61b75cde012b2e9eb284d4545583b5643b61ab"
 
+ewait@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/ewait/-/ewait-0.2.1.tgz#314cf5c2112dadfc43e224374943d2b04c233eb5"
+
 expand-brackets@^0.1.4:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/expand-brackets/-/expand-brackets-0.1.5.tgz#df07284e342a807cd733ac5af72411e581d1177b"

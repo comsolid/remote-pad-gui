@@ -1,8 +1,9 @@
 'use strict'
 
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import forever from 'forever-monitor'
 import path from 'path'
+import { WaitForAll } from 'ewait'
 
 console.log('node electron version:', process.version)
 
@@ -65,23 +66,23 @@ function createWindow () {
     ipcMain.on('restart-process', (event, module) => {
         if (module === 'web') {
             web.restart()
+
+            web.once('restart', () => {
+                event.sender.send('process-pid', {
+                    module: 'web',
+                    pid: web.child.pid
+                })
+            })
         } else if (module === 'broker') {
             broker.restart()
+
+            broker.once('restart', () => {
+                event.sender.send('process-pid', {
+                    module: 'broker',
+                    pid: broker.child.pid
+                })
+            })
         }
-
-        web.once('restart', () => {
-            event.sender.send('process-pid', {
-                module: 'web',
-                pid: web.child.pid
-            })
-        })
-
-        broker.once('restart', () => {
-            event.sender.send('process-pid', {
-                module: 'broker',
-                pid: broker.child.pid
-            })
-        })
     })
 
     // eslint-disable-next-line no-console
@@ -91,12 +92,26 @@ function createWindow () {
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
-
-    web.stop()
-    broker.stop()
-
     if (process.platform !== 'darwin') {
-        app.quit()
+        let wait = new WaitForAll({
+            timeout: 2000,
+            event: 'stop'
+        })
+        wait.add([web, broker])
+        web.stop()
+        broker.stop()
+
+        wait.once('done', () => {
+            console.log('all services exited')
+            app.quit()
+        })
+
+        wait.once('timeout', () => {
+            dialog.showErrorBox('Fail to stop services',
+                'The Web Server and MQTT Broker services took long than 2 seconds to exit.')
+        })
+
+        wait.wait()
     }
 })
 
