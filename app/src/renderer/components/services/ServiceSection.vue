@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import ServiceCard from 'components/home/ServiceCard'
+import ServiceCard from 'components/services/ServiceCard'
 
 export default {
     name: 'service-section',

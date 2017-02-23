@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import PlayerCard from 'components/home/PlayerCard'
+import PlayerCard from 'components/services/PlayerCard'
 import mqtt from 'mqtt'
 
 export default {
