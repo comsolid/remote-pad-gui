@@ -1,12 +1,36 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
-import pm2 from 'pm2'
+import { app, BrowserWindow, ipcMain, dialog } from 'electron'
+import forever from 'forever-monitor'
+import path from 'path'
+import { WaitForAll } from 'ewait'
+
+console.log('node electron version:', process.version)
 
 let mainWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:${require('../../../config').port}`
   : `file://${__dirname}/index.html`
+
+const webPath = 'production/server.js'
+const web = new (forever.Monitor)(webPath, {
+    max: 3,
+    cwd: path.join(__dirname, '../../../services/web'),
+    env: {
+        ELECTRON_NO_ASAR: true,
+        ELECTRON_RUN_AS_NODE: true
+    }
+})
+
+const brokerPath = 'src/index.js'
+const broker = new (forever.Monitor)(brokerPath, {
+    max: 3,
+    cwd: path.join(__dirname, '../../../services/mqtt-broker'),
+    env: {
+        ELECTRON_NO_ASAR: true,
+        ELECTRON_RUN_AS_NODE: true
+    }
+})
 
 function createWindow () {
   /**
@@ -24,22 +48,41 @@ function createWindow () {
         mainWindow = null
     })
 
-    pm2.connect(err => {
-        if (err) console.error(err)
+    web.start()
+    broker.start()
 
-        pm2.start({
-            name: 'remote-pad',
-            script: 'services/web/production/server.js'
-        }, (err, apps) => {
-            if (err) console.error(err)
+    mainWindow.webContents.on('did-finish-load', function() {
+        mainWindow.webContents.send('process-pid', {
+            module: 'web',
+            pid: web.child.pid
         })
 
-        pm2.start({
-            name: 'remote-pad-server',
-            script: 'services/mqtt-broker/src/index.js'
-        }, (err, apps) => {
-            if (err) console.error(err)
+        mainWindow.webContents.send('process-pid', {
+            module: 'broker',
+            pid: broker.child.pid
         })
+    })
+
+    ipcMain.on('restart-process', (event, module) => {
+        if (module === 'web') {
+            web.restart()
+
+            web.once('restart', () => {
+                event.sender.send('process-pid', {
+                    module: 'web',
+                    pid: web.child.pid
+                })
+            })
+        } else if (module === 'broker') {
+            broker.restart()
+
+            broker.once('restart', () => {
+                event.sender.send('process-pid', {
+                    module: 'broker',
+                    pid: broker.child.pid
+                })
+            })
+        }
     })
 
     // eslint-disable-next-line no-console
@@ -49,16 +92,26 @@ function createWindow () {
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
-    pm2.stop('remote-pad', err => {
-        if (err) console.error(err)
-    })
-
-    pm2.stop('remote-pad-server', err => {
-        if (err) console.error(err)
-    })
-
     if (process.platform !== 'darwin') {
-        app.quit()
+        let wait = new WaitForAll({
+            timeout: 2000,
+            event: 'stop'
+        })
+        wait.add([web, broker])
+        web.stop()
+        broker.stop()
+
+        wait.once('done', () => {
+            console.log('all services exited')
+            app.quit()
+        })
+
+        wait.once('timeout', () => {
+            dialog.showErrorBox('Fail to stop services',
+                'The Web Server and MQTT Broker services took long than 2 seconds to exit.')
+        })
+
+        wait.wait()
     }
 })
 

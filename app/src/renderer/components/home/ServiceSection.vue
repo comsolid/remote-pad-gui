@@ -8,13 +8,13 @@
             <div class="column">
                 <service-card
                     :description="services.web.description"
-                    :pm2service="services.web.pm2service"
+                    :module="services.web.module"
                 ></service-card>
             </div>
             <div class="column">
                 <service-card
                     :description="services.broker.description"
-                    :pm2service="services.broker.pm2service"
+                    :module="services.broker.module"
                 ></service-card>
             </div>
         </div>
@@ -32,13 +32,13 @@ export default {
     data () {
         return {
             services: {
-                'web': {
-                    'description': 'Web Server',
-                    'pm2service': 'remote-pad'
+                web: {
+                    description: 'Web Server',
+                    module: 'web'
                 },
-                'broker': {
-                    'description': 'MQTT Broker',
-                    'pm2service': 'remote-pad-server'
+                broker: {
+                    description: 'MQTT Broker',
+                    module: 'broker'
                 }
             }
         }
