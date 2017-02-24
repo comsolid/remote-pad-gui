@@ -11,5 +11,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="css">
+section.section {
+    background-color: #fcfcfc;
+}
 </style>
