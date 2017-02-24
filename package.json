@@ -4,6 +4,7 @@
   "description": "Electron app to manage both Remote Pad and Remote Pad Server",
   "scripts": {
     "build": "npm run pack && build",
+    "build:win32": "npm run pack && build --win --x64",
     "build:dir": "npm run pack && build --dir",
     "dev": "node tasks/runner.js",
     "e2e": "npm run pack && mocha test/e2e",
@@ -21,7 +22,6 @@
   "build": {
     "productName": "Remote Pad GUI",
     "appId": "org.comsolid.remote-pad-gui",
-    "category": "public.app-category.tools",
     "dmg": {
       "contents": [
         {
@@ -43,10 +43,12 @@
       "package.json"
     ],
     "mac": {
+      "category": "public.app-category.tools",
       "icon": "app/icons/icon.icns"
     },
     "win": {
-      "icon": "app/icons/icon.ico"
+      "icon": "app/icons/icon.ico",
+      "target": ["zip"]
     },
     "linux": {
       "target": [
@@ -77,7 +79,7 @@
     "del": "^2.2.1",
     "devtron": "^1.1.0",
     "electron": "^1.4.15",
-    "electron-builder": "^11.4.4",
+    "electron-builder": "^14.4.0",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
     "electron-rebuild": "^1.1.3",
