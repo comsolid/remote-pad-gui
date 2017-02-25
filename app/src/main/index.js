@@ -4,6 +4,8 @@ import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import forever from 'forever-monitor'
 import path from 'path'
 import { WaitForAll } from 'ewait'
+import settings from 'electron-settings'
+import { setupEmulatorsConfig } from './setup-emu-configs.js'
 
 console.log('node electron version:', process.version)
 
@@ -48,6 +50,8 @@ function createWindow () {
         mainWindow = null
     })
 
+    setupEmulatorsConfig(app.getPath('userData'))
+
     web.start()
     broker.start()
 
@@ -84,6 +88,17 @@ function createWindow () {
             })
         }
     })
+
+    settings.defaults({
+        emulators: {
+            mupen64plus: {
+                binary: '',
+                resolution: '800x600',
+                display: 'windowed'
+            }
+        }
+    })
+    settings.applyDefaults()
 
     // eslint-disable-next-line no-console
     console.log('mainWindow opened')

@@ -7,16 +7,19 @@
         <div class="columns">
             <mupen64plus-app></mupen64plus-app>
         </div>
+        <emulators-log></emulators-log>
     </div>
 </template>
 
 <script>
 import Mupen64plusApp from 'components/emulators/mupen64plus/App'
+import EmulatorsLog from 'components/emulators/Log'
 
 export default {
     name: 'emulators-content',
     components: {
-        Mupen64plusApp
+        Mupen64plusApp,
+        EmulatorsLog
     }
 }
 </script>

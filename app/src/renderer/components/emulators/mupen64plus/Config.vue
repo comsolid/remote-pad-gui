@@ -7,19 +7,25 @@
                 <button class="delete" @click="$emit('close')"></button>
             </header>
             <section class="modal-card-body">
-                <label class="label">Path to Mupen64Plus</label>
-                <p class="control">
-                    <input type="text" class="input">
+                <label class="label">Path to Mupen64Plus binary</label>
+                <p class="control has-addons">
+                    <input type="text" class="input is-expanded"
+                        v-model="form.binary" />
+                    <a class="button is-info" @click="chooseBinary">
+                        Browse...
+                    </a>
                 </p>
 
                 <label class="label">Display Mode</label>
                 <p class="control">
                     <label class="radio">
-                        <input type="radio" checked="checked">
+                        <input type="radio" v-model="form.display"
+                            value="fullscreen">
                         Fullscreen Mode
                     </label>
                     <label class="radio">
-                        <input type="radio">
+                        <input type="radio" v-model="form.display"
+                            value="windowed">
                         Windowed Mode
                     </label>
                 </p>
@@ -27,7 +33,7 @@
                 <label class="label">Resolution</label>
                 <p class="control">
                     <span class="select">
-                        <select>
+                        <select v-model="form.resolution">
                             <option v-for="res in resolutions"
                                 :value="res.value">
                                 {{res.text}}
@@ -45,6 +51,10 @@
 </template>
 
 <script>
+import settings from 'electron-settings'
+import { remote } from 'electron'
+const dialog = remote.dialog
+
 export default {
     name: 'mupen64plus-config',
     props: {
@@ -68,18 +78,37 @@ export default {
                 {
                     value: '1024x768',
                     text: '1024x768'
-                },
-                {
-                    value: 'custom',
-                    text: 'Custom'
                 }
-            ]
+            ],
+            form: {
+                binary: '',
+                resolution: '',
+                display: ''
+            }
         }
+    },
+    mounted () {
+        settings.get('emulators.mupen64plus')
+            .then(values => {
+                this.form = values
+            })
     },
     methods: {
         save () {
-            // save to preferences
-            this.$emit('close')
+            settings.set('emulators.mupen64plus', this.form)
+                .then(() => {
+                    this.$emit('close')
+                })
+        },
+        chooseBinary () {
+            dialog.showOpenDialog({
+                title: 'Choose Mupen64Plus binary...',
+                properties: ['openFile']
+            }, (filenames) => {
+                if (filenames) {
+                    this.form.binary = filenames[0]
+                }
+            })
         }
     }
 }
