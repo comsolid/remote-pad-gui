@@ -1,0 +1,26 @@
+{
+    "gitbook": ">3.0.0",
+    "plugins": [
+        "edit-link",
+        "theme-vuejs@git+https://github.com/pearofducks/gitbook-plugin-theme-vuejs.git",
+        "prism",
+        "-fontsettings",
+        "-highlight",
+        "github"
+    ],
+    "pluginsConfig": {
+        "edit-link": {
+            "base": "https://github.com/comsolid/remote-pad-gui/tree/master/docs/",
+            "label": "Edit This Page"
+        },
+        "github": {
+            "url": "https://github.com/comsolid/remote-pad-gui"
+        }
+    },
+    "links": {
+        "sharing": {
+            "facebook": true,
+            "twitter": true
+        }
+    }
+}
