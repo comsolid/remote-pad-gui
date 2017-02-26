@@ -48,7 +48,9 @@
     },
     "win": {
       "icon": "app/icons/icon.ico",
-      "target": ["zip"]
+      "target": [
+        "zip"
+      ]
     },
     "linux": {
       "target": [
@@ -79,7 +81,7 @@
     "del": "^2.2.1",
     "devtron": "^1.1.0",
     "electron": "^1.4.15",
-    "electron-builder": "^14.4.0",
+    "electron-builder": "^14.4.1",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
     "electron-rebuild": "^1.1.3",
