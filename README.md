@@ -26,6 +26,9 @@ npm run lint
 # run webpack in production
 npm run pack
 ```
+
+[Documentation](https://comsolid.github.io/remote-pad-gui)
+
 More information can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/docs/npm_scripts.html).
 
 ---

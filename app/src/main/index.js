@@ -124,6 +124,7 @@ app.on('window-all-closed', () => {
         wait.once('timeout', () => {
             dialog.showErrorBox('Fail to stop services',
                 'The Web Server and MQTT Broker services took long than 2 seconds to exit.')
+            app.quit()
         })
 
         wait.wait()
