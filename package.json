@@ -25,7 +25,7 @@
     "docs:publish": "npm run docs:build && cd docs/_book && git init && git commit --allow-empty -m 'Update docs' && git checkout -b gh-pages && git add . && git commit -am 'Update docs' && git push git@github.com:comsolid/remote-pad-gui gh-pages --force"
   },
   "build": {
-    "productName": "Remote Pad GUI",
+    "productName": "remote-pad-gui",
     "appId": "org.comsolid.remote-pad-gui",
     "dmg": {
       "contents": [
@@ -63,7 +63,10 @@
         "deb"
       ],
       "category": "Game",
-      "executableName": "remote-pad-gui"
+      "executableName": "remote-pad-gui",
+      "desktop": {
+        "Name": "Remote Pad GUI"
+      }
     },
     "extraFiles": [
       "services"
@@ -87,7 +90,7 @@
     "del": "^2.2.1",
     "devtron": "^1.1.0",
     "electron": "^1.4.15",
-    "electron-builder": "^14.4.1",
+    "electron-builder": "^11.4.4",
     "electron-debug": "^1.1.0",
     "electron-devtools-installer": "^2.0.1",
     "electron-rebuild": "^1.1.3",

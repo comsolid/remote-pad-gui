@@ -1,6 +1,6 @@
 {
   "name": "remote-pad-gui",
-  "productName": "Remote Pad GUI",
+  "productName": "remote-pad-gui",
   "version": "1.0.0",
   "description": "Electron app to manage both Remote Pad and Remote Pad Server",
   "homepage": "https://github.com/comsolid/remote-pad-gui",
