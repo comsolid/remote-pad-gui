@@ -95,6 +95,9 @@ function createWindow () {
                 binary: '',
                 resolution: '800x600',
                 display: 'windowed'
+            },
+            snes9x: {
+                binary: ''
             }
         }
     })

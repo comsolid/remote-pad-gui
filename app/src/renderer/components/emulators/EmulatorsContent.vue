@@ -6,6 +6,7 @@
         <hr>
         <div class="columns">
             <mupen64plus-app></mupen64plus-app>
+            <snes9x-app></snes9x-app>
         </div>
         <emulators-log></emulators-log>
     </div>
@@ -13,12 +14,14 @@
 
 <script>
 import Mupen64plusApp from 'components/emulators/mupen64plus/App'
+import Snes9xApp from 'components/emulators/snes9x/App'
 import EmulatorsLog from 'components/emulators/Log'
 
 export default {
     name: 'emulators-content',
     components: {
         Mupen64plusApp,
+        Snes9xApp,
         EmulatorsLog
     }
 }

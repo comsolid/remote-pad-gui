@@ -1,20 +1,19 @@
 <template lang="html">
     <emulator-app
-        name="Mupen64Plus"
+        name="Snes9x"
         :icon="app.icon"
         :isRunning="app.isRunning"
         @onStart="start"
         @onConfig="config.isActive = true">
-        <mupen64plus-config slot="config"
+        <snes9x-config slot="config"
             :isActive="config.isActive"
-            @close="config.isActive = false"
-        ></mupen64plus-config>
+            @close="config.isActive = false"></snes9x-config>
     </emulator-app>
 </template>
 
 <script>
 import EmulatorApp from 'components/emulators/EmulatorApp'
-import Mupen64plusConfig from 'components/emulators/mupen64plus/Config'
+import Snes9xConfig from 'components/emulators/snes9x/Config'
 import settings from 'electron-settings'
 import { remote } from 'electron'
 const dialog = remote.dialog
@@ -23,26 +22,26 @@ import forever from 'forever-monitor'
 import path from 'path'
 
 export default {
-    name: 'mupen64plus-app',
+    name: 'snes9x-app',
     components: {
         EmulatorApp,
-        Mupen64plusConfig
+        Snes9xConfig
     },
     data () {
         return {
-            config: {
-                isActive: false
-            },
             app: {
-                icon: require('./assets/mupen64plus-logo.svg'),
+                icon: require('./assets/snes9x-logo.svg'),
                 isRunning: false,
                 process: null
+            },
+            config: {
+                isActive: false
             }
         }
     },
     methods: {
         start () {
-            settings.get('emulators.mupen64plus')
+            settings.get('emulators.snes9x')
                 .then(values => {
                     if (values.binary) {
                         this.chooseROM(values)
@@ -53,22 +52,28 @@ export default {
         },
         chooseROM (params) {
             dialog.showOpenDialog({
-                title: 'Choose a N64 Rom ...',
+                title: 'Choose a Super Nintendo Rom ...',
                 properties: ['openFile'],
                 filters: [
                     {
-                        name: 'Nintendo 64 ROMs',
+                        name: 'Super Nintendo ROMs',
                         extensions: [
-                            'bin',
-                            'jap',
-                            'n64',
-                            'N64',
-                            'pal',
-                            'rom',
-                            'u64',
-                            'v64',
-                            'usa',
-                            'z64'
+                            'smc',
+                            'SMC',
+                            'fig',
+                            'FIG',
+                            'sfc',
+                            'SFC',
+                            'jma',
+                            'JMA',
+                            'zip',
+                            'ZIP',
+                            'gd3',
+                            'GD3',
+                            'swc',
+                            'SWC',
+                            'gz',
+                            'GZ'
                         ]
                     }
                 ]
@@ -82,13 +87,9 @@ export default {
         run (params, rom) {
             const cmd = [
                 params.binary,
-                `--${params.display}`,
-                '--resolution',
-                `${params.resolution}`,
-                '--configdir',
-                // TODO: allow race or directional pad configurations
-                path.join(app.getPath('userData'), 'profiles/race/n64--default'),
-                `${rom}`
+                '-conf',
+                path.join(app.getPath('userData'), 'profiles/race/snes--default/snes9x.xml'),
+                rom
             ]
             this.app.process = forever.start(cmd, {
                 max: 1,
@@ -117,5 +118,5 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
 </style>
