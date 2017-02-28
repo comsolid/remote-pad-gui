@@ -10,6 +10,21 @@ import { setupEmulatorsConfig } from './setup-emu-configs.js'
 console.log('node electron version:', process.version)
 
 let mainWindow
+
+// ensure Single Instance App
+const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+    if (mainWindow) {
+        if (mainWindow.isMinimized()) {
+            mainWindow.restore()
+        }
+        mainWindow.focus()
+    }
+})
+
+if (shouldQuit) {
+    app.quit()
+}
+
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:${require('../../../config').port}`
   : `file://${__dirname}/index.html`
