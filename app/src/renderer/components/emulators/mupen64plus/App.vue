@@ -15,6 +15,7 @@
 <script>
 import EmulatorApp from 'components/emulators/EmulatorApp'
 import Mupen64plusConfig from 'components/emulators/mupen64plus/Config'
+import EmulatorMixin from 'components/mixins/EmulatorMixin'
 import settings from 'electron-settings'
 import { remote } from 'electron'
 const dialog = remote.dialog
@@ -28,6 +29,9 @@ export default {
         EmulatorApp,
         Mupen64plusConfig
     },
+    mixins: [
+        EmulatorMixin
+    ],
     data () {
         return {
             config: {
@@ -80,6 +84,8 @@ export default {
             })
         },
         run (params, rom) {
+            this.configureProfile('n64--default')
+
             const cmd = [
                 params.binary,
                 `--${params.display}`,

@@ -14,6 +14,7 @@
 <script>
 import EmulatorApp from 'components/emulators/EmulatorApp'
 import Snes9xConfig from 'components/emulators/snes9x/Config'
+import EmulatorMixin from 'components/mixins/EmulatorMixin'
 import settings from 'electron-settings'
 import { remote } from 'electron'
 const dialog = remote.dialog
@@ -27,6 +28,9 @@ export default {
         EmulatorApp,
         Snes9xConfig
     },
+    mixins: [
+        EmulatorMixin
+    ],
     data () {
         return {
             app: {
@@ -85,6 +89,8 @@ export default {
             })
         },
         run (params, rom) {
+            this.configureProfile('snes--default')
+
             const cmd = [
                 params.binary,
                 '-conf',
