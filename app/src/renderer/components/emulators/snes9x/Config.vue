@@ -6,13 +6,17 @@
         @onSave="save">
         <div slot="form">
             <label class="label">Path to Snes9x binary</label>
-            <p class="control has-addons">
-                <input type="text" class="input is-expanded"
+            <div class="field has-addons">
+                <p class="control is-expanded">
+                    <input type="text" class="input is-expanded"
                     v-model="form.binary" />
-                <a class="button is-info" @click="chooseBinary">
-                    Browse...
-                </a>
-            </p>
+                </p>
+                <p class="control">
+                    <a class="button is-info" @click="chooseBinary">
+                        Browse...
+                    </a>
+                </p>
+            </div>
         </div>
     </emulator-config-modal>
 </template>

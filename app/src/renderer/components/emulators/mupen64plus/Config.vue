@@ -6,39 +6,47 @@
         @onSave="save">
         <div slot="form">
             <label class="label">Path to Mupen64Plus binary</label>
-            <p class="control has-addons">
-                <input type="text" class="input is-expanded"
+            <div class="field has-addons">
+                <p class="control is-expanded">
+                    <input type="text" class="input is-expanded"
                     v-model="form.binary" />
-                <a class="button is-info" @click="chooseBinary">
-                    Browse...
-                </a>
-            </p>
+                </p>
+                <p class="control">
+                    <a class="button is-info" @click="chooseBinary">
+                        Browse...
+                    </a>
+                </p>
+            </div>
 
-            <label class="label">Display Mode</label>
-            <p class="control">
-                <label class="radio">
-                    <input type="radio" v-model="form.display"
+            <div class="field">
+                <label class="label">Display Mode</label>
+                <p class="control">
+                    <label class="radio">
+                        <input type="radio" v-model="form.display"
                         value="fullscreen">
-                    Fullscreen Mode
-                </label>
-                <label class="radio">
-                    <input type="radio" v-model="form.display"
+                        Fullscreen Mode
+                    </label>
+                    <label class="radio">
+                        <input type="radio" v-model="form.display"
                         value="windowed">
-                    Windowed Mode
-                </label>
-            </p>
+                        Windowed Mode
+                    </label>
+                </p>
+            </div>
 
-            <label class="label">Resolution</label>
-            <p class="control">
-                <span class="select">
-                    <select v-model="form.resolution">
-                        <option v-for="res in resolutions"
-                            :value="res.value">
-                            {{res.text}}
-                        </option>
-                    </select>
-                </span>
-            </p>
+            <div class="field">
+                <label class="label">Resolution</label>
+                <p class="control">
+                    <span class="select">
+                        <select v-model="form.resolution">
+                            <option v-for="res in resolutions"
+                                :value="res.value">
+                                {{res.text}}
+                            </option>
+                        </select>
+                    </span>
+                </p>
+            </div>
         </div>
     </emulator-config-modal>
 </template>

@@ -18,7 +18,6 @@
 
 <script>
 import PlayerCard from 'components/services/PlayerCard'
-import mqtt from 'mqtt'
 
 export default {
     name: 'player-section',
@@ -48,36 +47,25 @@ export default {
                     number: 4,
                     isConnected: false
                 }
-            },
-            client: null
+            }
         }
     },
     mounted () {
-        const options = {
-            username: 'gui',
-            password: 'gui'
-        }
-        this.client = mqtt.connect('mqtt://localhost:1883', options)
-
-        this.client.on('connect', () => {
-            this.client.subscribe('gui/player', (err, granted) => {
+        const client = this.$store.getters.mqtt
+        client.on('connect', () => {
+            client.subscribe('gui/player', (err, granted) => {
                 if (err) console.error(err)
 
                 console.info('subscribed to', granted[0].topic)
             })
 
-            this.client.on('message', (topic, payload) => {
+            client.on('message', (topic, payload) => {
                 if (topic === 'gui/player') {
                     const player = JSON.parse(payload)
                     this.players[player.name].isConnected = player.connected
                 }
             })
         })
-    },
-    beforeDestroy () {
-        if (this.client) {
-            this.client.end()
-        }
     }
 }
 </script>
