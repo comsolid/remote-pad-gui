@@ -8,11 +8,9 @@ export function setupEmulatorsConfig (userData) {
     const dir = path.join(userData, 'profiles')
     fs.readdir(dir, (err, files) => {
         if (err) {
-            console.log('Emulators configurations not found. Copying...')
-            copyEmulatorsConfig(dir)
-        } else {
-            console.log('Emulators configurations found.')
+            console.log('Emulators configurations not found. First time copying...')
         }
+        copyEmulatorsConfig(dir)
     })
 
 }
@@ -26,8 +24,10 @@ function copyEmulatorsConfig (dir) {
         const options = {
             filter: [
                 '**/mupen64plus.cfg',
-                '**/snes9x.xml'
-            ]
+                '**/snes9x.xml',
+                '**/epsxerc'
+            ],
+            overwrite: false
         }
 
         const src = path.join(__dirname, '../../../services/mqtt-broker/profiles')

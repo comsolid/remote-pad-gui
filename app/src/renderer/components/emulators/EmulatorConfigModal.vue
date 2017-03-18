@@ -11,6 +11,7 @@
             </section>
             <footer class="modal-card-foot">
                 <a class="button is-success is-large"
+                    :class="{'is-loading': isSaving}"
                     @click.prevent="$emit('onSave')">
                     Save changes
                 </a>
@@ -32,6 +33,10 @@ export default {
         name: {
             type: String,
             required: true
+        },
+        isSaving: {
+            type: Boolean,
+            default: false
         }
     }
 }

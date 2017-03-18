@@ -1,5 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import mqtt from 'mqtt'
+
+const options = {
+    username: 'gui',
+    password: 'gui'
+}
+
+const client = mqtt.connect('mqtt://localhost:1883', options)
+client.on('connect', () => {
+    console.log('connected')
+})
 
 // import * as actions from './actions'
 // import * as getters from './getters'
@@ -24,6 +35,9 @@ export default new Vuex.Store({
     getters: {
         currentLog: (state) => {
             return state.emulators.log
+        },
+        mqtt: () => {
+            return client
         }
     },
     // actions,

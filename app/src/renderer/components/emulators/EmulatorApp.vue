@@ -10,7 +10,7 @@
                 <p class="title is-3" v-once>{{name}}</p>
                 <span class="tag is-medium"
                     :class="[isRunning ? 'is-success' : 'is-danger']">
-                    {{ isRunning ? 'running' : 'stopped' }}
+                    {{ isRunning ? 'Running' : 'Stopped' }}
                 </span>
             </div>
             <footer class="card-footer">
