@@ -18,7 +18,6 @@ import EpsxeConfig from 'components/emulators/epsxe/Config'
 import settings from 'electron-settings'
 import { remote } from 'electron'
 const dialog = remote.dialog
-// const app = remote.app
 import forever from 'forever-monitor'
 import path from 'path'
 
@@ -78,9 +77,6 @@ export default {
         },
         run (params, rom) {
             this.configureProfile('psx--default')
-
-            // enable one time configuration
-            // by copying the epsxerc to /home/$USER/.epsxe
 
             const cmd = [
                 params.binary,
