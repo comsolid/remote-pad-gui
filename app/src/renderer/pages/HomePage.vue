@@ -21,10 +21,6 @@ import MainContent from 'components/main/MainContent'
 import ServiceContent from 'components/services/ServiceContent'
 import EmulatorsContent from 'components/emulators/EmulatorsContent'
 
-// TODO: https://vuejs.org/v2/guide/components.html#Dynamic-Components
-// with keep-alive
-// https://gist.github.com/JeffreyWay/f844ca4dd1887d566759849665068162
-// https://laracasts.com/series/learn-vue-2-step-by-step/episodes/11
 export default {
     name: 'home-page',
     components: {

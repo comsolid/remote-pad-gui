@@ -4,7 +4,8 @@
         :icon="app.icon"
         :isRunning="app.isRunning"
         @onStart="start"
-        @onConfig="config.isActive = true">
+        @onConfig="config.isActive = true"
+        configType="one-time-configuration">
         <epsxe-config slot="config"
             :isActive="config.isActive"
             @close="config.isActive = false"></epsxe-config>

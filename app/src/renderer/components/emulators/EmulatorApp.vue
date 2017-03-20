@@ -1,6 +1,7 @@
 <template lang="html">
     <div class="column is-4">
         <div class="card">
+            <configuration-type :type="configType"></configuration-type>
             <div class="card-image">
                 <figure class="image is-128x128">
                     <img :src="icon" :alt="name">
@@ -27,9 +28,14 @@
 </template>
 
 <script>
+import ConfigurationType from 'components/emulators/ConfigurationType'
+
 // abstract emulator app
 export default {
     name: 'emulator-app',
+    components: {
+        ConfigurationType
+    },
     props: {
         name: {
             type: String,
@@ -43,6 +49,10 @@ export default {
             type: Boolean,
             required: true,
             default: false
+        },
+        configType: {
+            type: String,
+            required: true
         }
     },
     methods: {
@@ -62,7 +72,6 @@ export default {
     flex-direction: column;
     align-items: center;
 }
-
 .card-footer {
     align-self: stretch;
 }

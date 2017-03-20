@@ -4,7 +4,8 @@
         :icon="app.icon"
         :isRunning="app.isRunning"
         @onStart="start"
-        @onConfig="config.isActive = true">
+        @onConfig="config.isActive = true"
+        configType="plug-and-play">
         <snes9x-config slot="config"
             :isActive="config.isActive"
             @close="config.isActive = false"></snes9x-config>
