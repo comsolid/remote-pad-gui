@@ -21,7 +21,7 @@ export default {
             types: {
                 'plug-and-play': {
                     text: 'Plug and Play',
-                    color: 'is-success'
+                    color: 'is-info'
                 },
                 'one-time-configuration': {
                     text: 'One Time Configuration',
