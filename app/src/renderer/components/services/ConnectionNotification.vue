@@ -1,29 +1,42 @@
 <template lang="html">
     <div class="container">
-        <div class="notification" v-show="visible">
-            <button type="button"
-                class="delete"
-                @click="visible = false"
-            ></button>
-            <div class="content">
-                To access the Web Client open Google Chrome on your smartphone
-                and type in the address bar
+        <article class="message is-primary">
+            <div class="message-header">
+                <p class="title is-3 is-white">Welcome to Remote Pad</p>
             </div>
+            <div class="message-body">
+                To access the Controller open <b>Google Chrome</b>
+                on your smartphone and type in the address bar
 
-            <div v-if="addresses.length === 1">
-                <h3 class="title is-3">{{addresses[0]}}:8080</h3>
-            </div>
-            <div v-else>
-                <p>
-                    You have more than one network interface.<br>
-                    Please choose one of the following to test.
+                <div v-if="addresses.length === 0">
+                    <p>
+                        Network interface not found. Please, check
+                        if your computer is connected to a network.
+                    </p>
+                </div>
+                <div v-else-if="addresses.length === 1">
+                    <h3 class="title has-padding-top is-bold">
+                        {{addresses[0]}}:8080
+                    </h3>
+                </div>
+                <div v-else>
+                    <p>
+                        You have more than one network interface.<br>
+                        Please choose one of the following.
+                    </p>
+                    <ul class="has-padding-top">
+                        <li v-for="value in addresses">
+                            <b>{{value}}:8080</b>
+                        </li>
+                    </ul>
+                </div>
+                <p class="has-padding-top">
+                    <button class="button is-primary is-outlined"
+                        :class="{'is-loading': isLoading}"
+                        @click.prevent="reload">Reload</button>
                 </p>
-                <br>
-                <ul>
-                    <li v-for="value in addresses">{{value}}:8080</li>
-                </ul>
             </div>
-        </div>
+        </article>
     </div>
 </template>
 
@@ -34,15 +47,16 @@ export default {
     name: 'connection-notification',
     data () {
         return {
-            visible: true,
-            addresses: []
+            addresses: [],
+            isLoading: true
         }
     },
     mounted () {
-        this.addresses = this.localIp()
+        this.reload()
     },
     methods: {
         localIp () {
+            this.isLoading = true
             const interfaces = os.networkInterfaces()
             let addresses = []
 
@@ -53,12 +67,25 @@ export default {
                     }
                 })
             })
-
+            this.isLoading = false
             return addresses
+        },
+        reload () {
+            this.addresses = this.localIp()
         }
     }
 }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
+.has-padding-top {
+    padding-top: 1.25rem;
+}
+.is-white {
+    color: whitesmoke;
+    font-weight: bold;
+}
+.is-bold {
+    font-weight: bold
+}
 </style>
