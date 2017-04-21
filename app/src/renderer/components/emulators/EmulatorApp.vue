@@ -16,7 +16,9 @@
             </div>
             <footer class="card-footer">
                 <a href="#" class="card-footer-item"
-                    @click.prevent="emitStart">Start</a>
+                    @click.prevent="emitStartStop">
+                    {{ isRunning ? 'Stop' : 'Start' }}
+                </a>
                 <a href="#" class="card-footer-item"
                     @click.prevent="emitConfig">
                     Config
@@ -56,8 +58,12 @@ export default {
         }
     },
     methods: {
-        emitStart () {
-            this.$emit('onStart')
+        emitStartStop () {
+            if (this.isRunning) {
+                this.$emit('onStop')
+            } else {
+                this.$emit('onStart')
+            }
         },
         emitConfig () {
             this.$emit('onConfig')

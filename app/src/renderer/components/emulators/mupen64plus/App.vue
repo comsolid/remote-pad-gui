@@ -4,6 +4,7 @@
         :icon="app.icon"
         :isRunning="app.isRunning"
         @onStart="start"
+        @onStop="stop"
         @onConfig="config.isActive = true"
         configType="plug-and-play">
         <mupen64plus-config slot="config"
@@ -114,12 +115,15 @@ export default {
             this.app.process.on('stderr', (data) => {
                 this.$store.commit('appendLog', data.toString())
             })
+        },
+        stop () {
+            if (this.app.process) {
+                this.app.process.stop()
+            }
         }
     },
     beforeDestroy () {
-        if (this.app.process) {
-            this.app.process.stop()
-        }
+        this.stop()
     }
 }
 </script>
