@@ -1,35 +1,34 @@
 <template lang="html">
     <emulator-app
-        name="Mupen64Plus"
+        name="Dolphin"
         :icon="app.icon"
         :isRunning="app.isRunning"
         @onStart="start"
         @onStop="stop"
         @onConfig="config.isActive = true"
-        configType="plug-and-play">
-        <mupen64plus-config slot="config"
+        configType="one-time-configuration">
+        <dolphin-config slot="config"
             :isActive="config.isActive"
             @close="config.isActive = false"
-        ></mupen64plus-config>
+        ></dolphin-config>
     </emulator-app>
 </template>
 
 <script>
 import EmulatorApp from 'components/emulators/EmulatorApp'
-import Mupen64plusConfig from 'components/emulators/mupen64plus/Config'
+import DolphinConfig from 'components/emulators/dolphin/Config'
 import EmulatorMixin from 'components/mixins/EmulatorMixin'
 import settings from 'electron-settings'
 import { remote } from 'electron'
 const dialog = remote.dialog
-const app = remote.app
 import forever from 'forever-monitor'
 import path from 'path'
 
 export default {
-    name: 'mupen64plus-app',
+    name: 'dolphin-app',
     components: {
         EmulatorApp,
-        Mupen64plusConfig
+        DolphinConfig
     },
     mixins: [
         EmulatorMixin
@@ -40,7 +39,7 @@ export default {
                 isActive: false
             },
             app: {
-                icon: require('./assets/mupen64plus-logo.svg'),
+                icon: require('./assets/dolphin-logo.svg'),
                 isRunning: false,
                 process: null
             }
@@ -48,7 +47,7 @@ export default {
     },
     methods: {
         start () {
-            settings.get('emulators.mupen64plus')
+            settings.get('emulators.dolphin')
                 .then(values => {
                     if (values.binary) {
                         this.chooseROM(values)
@@ -59,22 +58,20 @@ export default {
         },
         chooseROM (params) {
             dialog.showOpenDialog({
-                title: 'Choose a N64 ROM ...',
+                title: 'Choose a Game Cube ROM ...',
                 properties: ['openFile'],
                 filters: [
                     {
-                        name: 'Nintendo 64 ROMs',
+                        name: 'Nintendo Game Cube ROMs',
                         extensions: [
-                            'bin',
-                            'jap',
-                            'n64',
-                            'N64',
-                            'pal',
-                            'rom',
-                            'u64',
-                            'v64',
-                            'usa',
-                            'z64'
+                            'elf',
+                            'dol',
+                            'gmc',
+                            'iso',
+                            'wbfs',
+                            'ciso',
+                            'gcz',
+                            'wad'
                         ]
                     }
                 ]
@@ -86,17 +83,12 @@ export default {
             })
         },
         run (params, rom) {
-            this.configureProfile('n64--default')
+            this.configureProfile('ngc--default')
 
             const cmd = [
                 params.binary,
-                `--${params.display}`,
-                '--resolution',
-                `${params.resolution}`,
-                '--configdir',
-                // TODO: allow race or directional pad configurations
-                path.join(app.getPath('userData'), 'profiles/race/n64--default'),
-                `${rom}`
+                '-e',
+                rom
             ]
             this.app.process = forever.start(cmd, {
                 max: 1,
@@ -128,5 +120,5 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
 </style>

@@ -25,7 +25,8 @@ function copyEmulatorsConfig (dir) {
             filter: [
                 '**/mupen64plus.cfg',
                 '**/snes9x.xml',
-                '**/epsxerc'
+                '**/epsxerc',
+                '**/GCPadNew.ini'
             ],
             overwrite: false
         }

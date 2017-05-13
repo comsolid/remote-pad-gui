@@ -120,6 +120,10 @@ function createWindow () {
                 resolution: '',
                 display: '',
                 ignorePreviousConfiguration: false
+            },
+            dolphin: {
+                binary: '',
+                ignorePreviousConfiguration: false
             }
         }
     })

@@ -1,12 +1,12 @@
 <template lang="html">
     <emulator-config-modal
-        name="ePSXe"
+        name="Dolphin"
         :isActive="isActive"
         :isSaving="isSaving"
         @close="$emit('close')"
         @onSave="save">
         <div slot="form">
-            <label class="label">Path to ePSXe binary</label>
+            <label class="label">Path to Dolphin binary</label>
             <div class="field has-addons">
                 <p class="control is-expanded">
                     <input type="text" class="input is-expanded"
@@ -16,49 +16,6 @@
                     <a class="button is-info" @click="chooseBinary">
                         Browse...
                     </a>
-                </p>
-            </div>
-
-            <label class="label">Path to PlayStation BIOS</label>
-            <div class="field has-addons">
-                <p class="control is-expanded">
-                    <input type="text" class="input is-expanded"
-                    v-model="form.bios" />
-                </p>
-                <p class="control">
-                    <a class="button is-info" @click="chooseBios">
-                        Browse...
-                    </a>
-                </p>
-            </div>
-
-            <div class="field">
-                <label class="label">Display Mode</label>
-                <p class="control">
-                    <label class="radio">
-                        <input type="radio" v-model="form.display"
-                        value="fullscreen">
-                        Fullscreen Mode
-                    </label>
-                    <label class="radio">
-                        <input type="radio" v-model="form.display"
-                        value="windowed">
-                        Windowed Mode
-                    </label>
-                </p>
-            </div>
-
-            <div class="field">
-                <label class="label">Resolution</label>
-                <p class="control">
-                    <span class="select">
-                        <select v-model="form.resolution">
-                            <option v-for="res in resolutions"
-                                :value="res.value">
-                                {{res.text}}
-                            </option>
-                        </select>
-                    </span>
                 </p>
             </div>
 
@@ -78,20 +35,21 @@
 <script>
 import EmulatorConfigModal from 'components/emulators/EmulatorConfigModal'
 import settings from 'electron-settings'
+import { remote } from 'electron'
+import mkdirp from 'mkdirp'
+import saveConfig from './save-config'
 import path from 'path'
 import fs from 'fs'
-import saveConfig from './save-config'
-import { remote } from 'electron'
 
 const dialog = remote.dialog
 const app = remote.app
 const CONFIG_FILE = path.join(
     app.getPath('home'),
-    '.epsxe/epsxerc'
+    '.config/dolphin-emu/GCPadNew.ini'
 )
 
 export default {
-    name: 'epsxe-config',
+    name: 'dolphin-config',
     components: {
         EmulatorConfigModal
     },
@@ -107,37 +65,12 @@ export default {
             isSaving: false,
             form: {
                 binary: '',
-                bios: '',
-                resolution: '',
-                display: '',
                 ignorePreviousConfiguration: false
-            },
-            resolutions: [
-                {
-                    value: '640x480',
-                    text: '640x480 (4:3)'
-                },
-                {
-                    value: '800x600',
-                    text: '800x600 (4:3)'
-                },
-                {
-                    value: '1024x768',
-                    text: '1024x768 (4:3)'
-                },
-                {
-                    value: '1152x864',
-                    text: '1152x864 (4:3)'
-                },
-                {
-                    value: '1440x900',
-                    text: '1440x900 (16:10)'
-                }
-            ]
+            }
         }
     },
     mounted () {
-        settings.get('emulators.epsxe')
+        settings.get('emulators.dolphin')
             .then(values => {
                 this.form = values
             })
@@ -145,7 +78,7 @@ export default {
     methods: {
         save () {
             this.isSaving = true
-            settings.set('emulators.epsxe', this.form)
+            settings.set('emulators.dolphin', this.form)
                 .then(() => {
                     return this.checkEmulatorDirectory()
                 })
@@ -155,10 +88,13 @@ export default {
                 .then(() => {
                     const filepath = path.join(
                         app.getPath('userData'),
-                        'profiles/race/psx--default/epsxerc'
+                        // TODO: enable user to configure which pad
+                        // type he wants. In this scenario he always
+                        // gets directional
+                        'profiles/directional/ngc--default/GCPadNew.ini'
                     )
                     const outfilepath = CONFIG_FILE
-                    return saveConfig(filepath, this.form, outfilepath)
+                    return saveConfig(filepath, outfilepath)
                 })
                 .then(() => {
                     this.isSaving = false
@@ -171,7 +107,7 @@ export default {
         },
         chooseBinary () {
             dialog.showOpenDialog({
-                title: 'Choose ePSXe binary...',
+                title: 'Choose Dolphin binary...',
                 properties: ['openFile']
             }, (filenames) => {
                 if (filenames) {
@@ -179,23 +115,21 @@ export default {
                 }
             })
         },
-        chooseBios () {
-            dialog.showOpenDialog({
-                title: 'Choose PlayStation BIOS...',
-                properties: ['openFile'],
-                filters: [
-                    {
-                        name: 'PlayStation BIOS',
-                        extensions: [
-                            'bin',
-                            'BIN'
-                        ]
+        checkEmulatorDirectory () {
+            return new Promise((resolve, reject) => {
+                const dir = path.join(
+                    app.getPath('home'),
+                    '.config/dolphin-emu/'
+                )
+                mkdirp(dir, (err) => {
+                    if (err) {
+                        if (err.code === 'EEXIST') {
+                            return resolve()
+                        }
+                        return reject(err)
                     }
-                ]
-            }, (filenames) => {
-                if (filenames) {
-                    this.form.bios = filenames[0]
-                }
+                    return resolve()
+                })
             })
         },
         checkPreviousConfiguration () {
@@ -216,7 +150,7 @@ export default {
                             'Backup'
                         ],
                         defaultId: 1,
-                        message: 'Previous configuration for ePSXe emulator found. Do you wish to make a backup?',
+                        message: 'Previous configuration for Dolphin Emulator found. Do you wish to make a backup?',
                         cancelId: 0
                     }, (response) => {
                         if (response === 1) {
@@ -237,7 +171,7 @@ export default {
         backupPreviousConfiguration () {
             return new Promise((resolve, reject) => {
                 dialog.showSaveDialog({
-                    title: 'Save previous ePSXe configuration',
+                    title: 'Save previous Dolphin configuration',
                     defaultPath: app.getPath('documents')
                 }, (filename) => {
                     if (filename) {
@@ -257,23 +191,6 @@ export default {
                     } else {
                         reject('Canceled by the user')
                     }
-                })
-            })
-        },
-        checkEmulatorDirectory () {
-            return new Promise((resolve, reject) => {
-                const dir = path.join(
-                    app.getPath('home'),
-                    '.epsxe'
-                )
-                fs.mkdir(dir, (err) => {
-                    if (err) {
-                        if (err.code === 'EEXIST') {
-                            return resolve()
-                        }
-                        return reject(err)
-                    }
-                    return resolve()
                 })
             })
         }

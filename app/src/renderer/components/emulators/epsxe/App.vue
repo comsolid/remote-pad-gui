@@ -82,6 +82,7 @@ export default {
 
             const cmd = [
                 params.binary,
+                // TODO: create setting for enable/disable gui
                 '-nogui',
                 '-fastboot',
                 '-bios',
